@@ -24,4 +24,6 @@ public class PopupManager : MonoBehaviour
 
         Time.timeScale = 1f;
     }
+
+
 }

@@ -1,32 +1,58 @@
 using UnityEngine;
+using System.Collections;
 
 public class Movement : MonoBehaviour
 {
-    public float speed = 30;
-
-    private float speed2;
-
-    [SerializeField]
-    private float speed3;
+    public float speed = 5f;
+    private bool aClique = false;
 
     void Update()
     {
-        float movementX = Input.GetAxis("Horizontal");
-        float movementY = Input.GetAxis("Vertical");
+        if (Input.GetKeyDown(KeyCode.D) && !aClique)
+        {
+            StartCoroutine(Deplacer(Vector3.back));
+            aClique = true;
+        }
 
-        //Debug.Log($"MovementX = {movementX}, MovementY = {movementY}");
+        if (Input.GetKeyDown(KeyCode.A) && !aClique)
+        {
+            StartCoroutine(Deplacer(Vector3.forward));
+            aClique = true;
+        }
 
-        Vector3 movement = new Vector3(movementX, 0, movementY);
+        if (Input.GetKeyDown(KeyCode.W) && !aClique)
+        {
+            StartCoroutine(Deplacer(Vector3.right));
+            aClique = true;
+        }
 
-        transform.Rotate(movement * Time.deltaTime * speed);
+        if (Input.GetKeyDown(KeyCode.S) && !aClique)
+        {
+            StartCoroutine(Deplacer(Vector3.left));
+            aClique = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
+        {
+            aClique = false;
+        }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private IEnumerator Deplacer(Vector3 direction)
     {
-        if (other.tag == "Finish")
+        float tempsTotal = 0.2f;
+        float tempsEcoule = 0f;
+
+        Vector3 positionInitiale = transform.position;
+        Vector3 positionFinale = positionInitiale + direction;
+
+        while (tempsEcoule < tempsTotal)
         {
-            Debug.Log("Il a bien le tag finish");
+            tempsEcoule += Time.deltaTime;
+            transform.position = Vector3.Lerp(positionInitiale, positionFinale, tempsEcoule / tempsTotal);
+            yield return null;
         }
-        
+
+        transform.position = positionFinale;
     }
 }
