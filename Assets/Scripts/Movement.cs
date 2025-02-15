@@ -8,28 +8,113 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
+        RaycastHit hit;
+        bool canMoove=false;
+
         if (Input.GetKeyDown(KeyCode.D) && !aClique)
         {
-            StartCoroutine(Deplacer(Vector3.back));
-            aClique = true;
+            
+            if (Physics.Raycast(transform.position, Vector3.back, out hit, 1f))
+            {
+                if (hit.collider.CompareTag("Box")) // Si c'est une bordure, on ne bouge pas
+                {
+                    canMoove = PeutBouger(Vector3.back, 2.5f);
+                }
+                else
+                {
+                    canMoove = PeutBouger(Vector3.back, 1.5f);
+                }
+            }
+            else
+            {
+                canMoove = PeutBouger(Vector3.back, 1.5f);
+            }
+
+            if (canMoove)
+            {
+                StartCoroutine(Deplacer(Vector3.back));
+                aClique = true;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.A) && !aClique)
         {
-            StartCoroutine(Deplacer(Vector3.forward));
-            aClique = true;
+
+            if (Physics.Raycast(transform.position, Vector3.forward, out hit, 1f))
+            {
+                if (hit.collider.CompareTag("Box")) // Si c'est une bordure, on ne bouge pas
+                {
+                    canMoove = PeutBouger(Vector3.forward, 2.5f);
+                }
+                else
+                {
+                    canMoove = PeutBouger(Vector3.forward, 1.5f);
+                }
+            }
+            else
+            {
+                canMoove = PeutBouger(Vector3.forward, 1.5f);
+            }
+
+            if (canMoove)
+            {
+                StartCoroutine(Deplacer(Vector3.forward));
+                aClique = true;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.W) && !aClique)
         {
-            StartCoroutine(Deplacer(Vector3.right));
-            aClique = true;
+
+            if (Physics.Raycast(transform.position, Vector3.right, out hit, 1f))
+            {
+                if (hit.collider.CompareTag("Box")) // Si c'est une bordure, on ne bouge pas
+                {
+                    canMoove = PeutBouger(Vector3.right, 2.5f);
+                }
+                else
+                {
+                    canMoove = PeutBouger(Vector3.right, 1.5f);
+                }
+            }
+            else
+            {
+                canMoove = PeutBouger(Vector3.right, 1.5f);
+            }
+
+            if (canMoove)
+
+                if (canMoove)
+            {
+                StartCoroutine(Deplacer(Vector3.right));
+                aClique = true;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.S) && !aClique)
         {
-            StartCoroutine(Deplacer(Vector3.left));
-            aClique = true;
+
+            if (Physics.Raycast(transform.position, Vector3.left, out hit, 1f))
+            {
+                if (hit.collider.CompareTag("Box")) // Si c'est une bordure, on ne bouge pas
+                {
+                    canMoove = PeutBouger(Vector3.left, 2.5f);
+                }
+                else
+                {
+                    canMoove = PeutBouger(Vector3.left, 1.5f);
+                }
+            }
+            else
+            {
+                canMoove = PeutBouger(Vector3.left, 1.5f);
+            }
+
+            if (canMoove)
+            {
+                StartCoroutine(Deplacer(Vector3.left));
+                aClique = true;
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
@@ -54,5 +139,22 @@ public class Movement : MonoBehaviour
         }
 
         transform.position = positionFinale;
+    }
+
+    // Vérifie s'il y a une bordure dans la direction donnée
+    private bool PeutBouger(Vector3 direction, float distanceDetection)
+    {
+        Vector3 nouvellePosition = transform.position + (direction * distanceDetection);
+        Collider[] objets = Physics.OverlapSphere(nouvellePosition, 0.1f);
+
+        foreach (Collider objet in objets)
+        {
+            if (objet.CompareTag("Border"))
+            {
+                return false; 
+            }
+        }
+
+        return true;
     }
 }
